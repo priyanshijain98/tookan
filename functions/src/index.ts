@@ -166,3 +166,45 @@ export const onAssignAgentsTask = functions.firestore
         console.log('onAssignAgentsTaskTriggered',)
         return tookanFunctions.AssignTookanAgentTask(snapshot,context);
     });  
+
+export const onAddCustomer = functions.firestore
+    .document('users/{customerId}')
+    .onCreate((snapshot,context) => {
+        console.log('onAddCustomerTriggered',)
+        return tookanFunctions.AddNewCustomer(snapshot,context);
+    });  
+
+export const onEditCustomer = functions.firestore
+    .document('users/{customerId}')
+    .onCreate((snapshot,context) => {
+        console.log('onEditCustomerTriggered',)
+        return tookanFunctions.EditCustomer(snapshot,context);
+    });  
+
+export const onFindCustomerWithPhone = functions.firestore
+    .document('users/{customerId}')
+    .onCreate((snapshot,context) => {
+        console.log('onFindCustomerWithPhoneTriggered',)
+        return tookanFunctions.FindCustomerWithPhone(snapshot,context);
+    });  
+
+export const onFindCustomerWithName = functions.firestore
+    .document('users/{customerId}')
+    .onCreate((snapshot,context) => {
+        console.log('onFindCustomerWithNameTriggered',)
+        return tookanFunctions.FindCustomerWithName(snapshot,context);
+    });  
+
+export const onViewCustomerProfile = functions.firestore
+    .document('users/{customerId}')
+    .onCreate((snapshot,context) => {
+        console.log('onViewCustomerProfileTriggered',)
+        return tookanFunctions.ViewTookanCustomerProfile(snapshot,context);
+    });  
+
+export const onDeleteCustomer = functions.firestore
+    .document('users/{customerId}')
+    .onCreate((snapshot,context) => {
+        console.log('onDeleteCustomerTriggered',)
+        return tookanFunctions.DeleteTookanCustomer(snapshot,context);
+    }); 

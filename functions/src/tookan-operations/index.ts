@@ -1,5 +1,5 @@
 import {
-    TOOKAN_API_KEY,TASKS, AGENTS
+    TOOKAN_API_KEY,TASKS, AGENTS, USERS, PROVIDERS
 } from "../constants";
 import {firestoreInstance} from "../index";
 import * as Tookan from "tookan-api";
@@ -777,4 +777,526 @@ async function assigntasktoagent(res,agentId): Promise<string> {
     const taskRef = firestoreInstance.collection(AGENTS).doc(agentId);
     taskRef.set(res.data).then(() => console.log("Task assigned successfully based on agent Id:", agentId)).catch(err => console.log("Task assigning based on agent id failed for: " + err));
 	return agentId
+}
+
+export async function AddNewCustomer(snapshot, context) {
+    
+    const customerId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering Add new Customer for customer Id', customerId, newValue);
+
+    const options = {
+        api_key: TOOKAN_API_KEY,
+        user_type: 0,
+        name: newValue.full_name,
+        phone: newValue.phone_number,
+        email: newValue.email,
+        address: newValue.address,
+        latitude: newValue.latitude,
+        longitude: newValue.longitude
+      };
+    
+      //Add customers in tookan
+    console.log('Add customers for options: ', options);
+    return client.addCustomer(options).then(res => {
+        return CustomerAdd(res,customerId);   
+    })
+    .catch(err => {
+        console.log("Adding customers failed: " + err)
+    });
+}
+
+async function CustomerAdd(res,customerId): Promise<string> {
+    console.log("Customer Added for customerId: ",customerId,"Response received from tookan: ",res);
+    console.log("Adding customers based on response for customerId started",customerId);
+    console.log("Customer added for customerid ",customerId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(USERS).doc(customerId);
+    taskRef.set(res.data).then(() => console.log("Customer added based on customer Id:", customerId)).catch(err => console.log("Adding customer based on customer id failed for: " + err));
+	return customerId
+}
+
+export async function EditCustomer(snapshot, context) {
+    
+    const customerId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering Edit Customer details for customer Id', customerId, newValue);
+
+    const options = {
+      api_key: TOOKAN_API_KEY,
+      user_type: 0,
+      customer_id: newValue.user_id,
+      name: newValue.full_name,
+      phone: newValue.phone_number,
+      email: newValue.email,
+      address: newValue.address,
+      latitude: newValue.latitude,
+      longitude: newValue.longitude
+    };
+    
+      //Edit customers in tookan
+    console.log('Edit customers for options: ', options);
+    return client.editCustomer(options).then(res => {
+        return CustomerEdit(res,customerId);   
+    })
+    .catch(err => {
+        console.log("Editing customers failed: " + err)
+    });
+}
+
+async function CustomerEdit(res,customerId): Promise<string> {
+    console.log("Customer Edited for customerId: ",customerId,"Response received from tookan: ",res);
+    console.log("Editing customers based on response for customerId started",customerId);
+    console.log("Customer edited for customerid ",customerId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(USERS).doc(customerId);
+    taskRef.set(res.data).then(() => console.log("Customer edited based on customer Id:", customerId)).catch(err => console.log("Editing customer based on customer id failed for: " + err));
+	return customerId
+}
+
+export async function FindCustomerWithPhone(snapshot, context) {
+    
+    const customerId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering Find customer with phone for customer Id', customerId, newValue);
+
+    const options = {
+      api_key: TOOKAN_API_KEY,
+      customer_phone: newValue.phone_number
+    };
+    
+      //Getting customers with phone in tookan
+    console.log('Get customers with phone for options: ', options);
+    return client.findCustomerWithPhone(options).then(res => {
+        return Customerwithphone(res,customerId);   
+    })
+    .catch(err => {
+        console.log("Getting customers with phone failed: " + err)
+    });
+}
+
+async function Customerwithphone(res,customerId): Promise<string> {
+    console.log("Finding customers with phone for customerId: ",customerId,"Response received from tookan: ",res);
+    console.log("Finding customers with phone based on response for customerId started",customerId);
+    console.log("Finding customers with phone for customerid ",customerId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(USERS).doc(customerId);
+    taskRef.set(res.data).then(() => console.log("Finding customers with phone based on customer Id:", customerId)).catch(err => console.log("Finding customer with phone based on customer id failed for: " + err));
+	return customerId
+}
+
+export async function FindCustomerWithName(snapshot, context) {
+    
+    const customerId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering Find customer with Name for customer Id', customerId, newValue);
+
+    const options = {
+      api_key: TOOKAN_API_KEY,
+      customer_name: newValue.full_name
+    };
+    
+      //Getting customers with name in tookan
+    console.log('Get customers with name for options: ', options);
+    return client.FindCustomerWithName(options).then(res => {
+        return Customerwithname(res,customerId);   
+    })
+    .catch(err => {
+        console.log("Getting customers with name failed: " + err)
+    });
+}
+
+async function Customerwithname(res,customerId): Promise<string> {
+    console.log("Finding customers with name: ",customerId,"Response received from tookan: ",res);
+    console.log("Finding customers with name based on response for customerId started",customerId);
+    console.log("Finding customers with name ",customerId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(USERS).doc(customerId);
+    taskRef.set(res.data).then(() => console.log("Finding customers with name based on customer Id:", customerId)).catch(err => console.log("Finding customer with name based on customer id failed for: " + err));
+	return customerId
+}
+
+export async function ViewTookanCustomerProfile(snapshot, context) {
+    
+    const customerId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering view customer profile for customer Id', customerId, newValue);
+
+    const options = {
+      api_key: TOOKAN_API_KEY,
+      customer_id: newValue.user_id
+    };
+    
+      //viewing customers profile in tookan
+    console.log('View customer profile for options: ', options);
+    return client.viewCustomerProfile(options).then(res => {
+        return Customerprofile(res,customerId);   
+    })
+    .catch(err => {
+        console.log("Viewing customer profile failed: " + err)
+    });
+}
+
+async function Customerprofile(res,customerId): Promise<string> {
+    console.log("Viewing customers profile with name: ",customerId,"Response received from tookan: ",res);
+    console.log("Viewing customers profile based on response for customerId started",customerId);
+    console.log("Viewing customers profile for customer Id ",customerId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(USERS).doc(customerId);
+    taskRef.set(res.data).then(() => console.log("Viewing customers profile for customer Id:", customerId)).catch(err => console.log("Viewing customer profile for customer id failed for: " + err));
+	return customerId
+}
+
+export async function DeleteTookanCustomer(snapshot, context) {
+    
+    const customerId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering delete customer for customer Id', customerId, newValue);
+
+    const options = {
+      api_key: TOOKAN_API_KEY,
+      customer_id: newValue.user_id
+    };
+    
+      //Deleting customers in tookan
+    console.log('Delete customer for options: ', options);
+    return client.deleteCustomer(options).then(res => {
+        return CustomerDelete(res,customerId);   
+    })
+    .catch(err => {
+        console.log("Deleting customer failed: " + err)
+    });
+}
+
+async function CustomerDelete(res,customerId): Promise<string> {
+    console.log("Deleting customers for customer ID: ",customerId,"Response received from tookan: ",res);
+    console.log("Deleting customers based on response for customerId started",customerId);
+    console.log("Deleting customers for customer Id ",customerId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(USERS).doc(customerId);
+    taskRef.set(res.data).then(() => console.log("Deleting customers for customer Id:", customerId)).catch(err => console.log("Deleting customer for customer id failed for: " + err));
+	return customerId
+}
+
+export async function CreateNewMerchant(snapshot, context) {
+    
+    const merchantId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering create new merchant for merchant Id', merchantId, newValue);
+
+    const options = {
+        name: newValue.name,
+        first_name: newValue.first_name,
+        last_name: newValue.last_name ,
+        company_address: newValue.company_address,
+        company_name: newValue.provider_name ,
+        email: newValue.new_email ,
+        timezone: newValue.timezone,
+        phone_directory: {
+          phone: newValue.phone,
+          country_code: newValue.country_code
+        },
+        merchant_permission: {
+          view_task: newValue.view_task,
+          add_task: newValue.add_task,
+          add_team: newValue.add_team ,
+          view_team: newValue.view_team ,
+          add_region: newValue.add_region ,
+          view_region: newValue.view_region ,
+          add_agent: newValue.add_agent,
+          view_agent: newValue.view_agent ,
+          view_fleet_avalibility: newValue.view_fleet_avalibility ,
+          edit_fleet_avalibility: newValue.edit_fleet_avalibility 
+        },
+        commission_percentage: newValue.commission_percentage,
+        password: newValue.password,
+        geofence: newValue.geofence,
+        api_key: TOOKAN_API_KEY,
+        user_id: newValue.user_id
+      };
+    
+      //Creatiing new merchant in tookan
+    console.log('Creating new merchant for options: ', options);
+    return client.createMerchant(options).then(res => {
+        return NewMerchant(res,merchantId);   
+    })
+    .catch(err => {
+        console.log("Creating new merchant failed: " + err)
+    });
+}
+
+async function NewMerchant(res,merchantId): Promise<string> {
+    console.log("Creating new merchant for merchant ID: ",merchantId,"Response received from tookan: ",res);
+    console.log("Creating new merchants based on response for merchantId started",merchantId);
+    console.log("Creating new merchants for merchant Id ",merchantId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(PROVIDERS).doc(merchantId);
+    taskRef.set(res.data).then(() => console.log("Creating new merchants for merchant Id:", merchantId)).catch(err => console.log("Creating new merchants for merchant id failed for: " + err));
+	return merchantId
+}
+
+export async function EditTookanMerchant(snapshot, context) {
+    
+    const merchantId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering edit merchant for merchant Id', merchantId, newValue);
+
+    const options = {
+        name: newValue.name,
+        first_name: newValue.first_name,
+        last_name: newValue.last_name ,
+        company_address: newValue.company_address,
+        company_name: newValue.provider_name ,
+        email: newValue.new_email ,
+        timezone: newValue.timezone,
+        phone_directory: {
+          phone: newValue.phone,
+          country_code: newValue.country_code
+        },
+        merchant_permission: {
+          view_task: newValue.view_task,
+          add_task: newValue.add_task,
+          add_team: newValue.add_team ,
+          view_team: newValue.view_team ,
+          add_region: newValue.add_region ,
+          view_region: newValue.view_region ,
+          add_agent: newValue.add_agent,
+          view_agent: newValue.view_agent ,
+          view_fleet_avalibility: newValue.view_fleet_avalibility ,
+          edit_fleet_avalibility: newValue.edit_fleet_avalibility 
+        },
+        commission_percentage: newValue.commission_percentage,
+        merchant_id: newValue.merchant_id,
+        api_key: TOOKAN_API_KEY,
+        user_id: newValue.user_id
+      };
+    
+      //Editing merchant in tookan
+    console.log('Editing merchant for options: ', options);
+    return client.editMerchant(options).then(res => {
+        return MerchantEdit(res,merchantId);   
+    })
+    .catch(err => {
+        console.log("Editing merchant failed: " + err)
+    });
+}
+
+async function MerchantEdit(res,merchantId): Promise<string> {
+    console.log("Editing merchant for merchant ID: ",merchantId,"Response received from tookan: ",res);
+    console.log("Editing merchants based on response for merchantId started",merchantId);
+    console.log("Editing merchants for merchant Id ",merchantId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(PROVIDERS).doc(merchantId);
+    taskRef.set(res.data).then(() => console.log("Editing merchants for merchant Id:", merchantId)).catch(err => console.log("Editing merchants for merchant id failed for: " + err));
+	return merchantId
+}
+
+export async function ViewTookanMerchant(snapshot, context) {
+    
+    const merchantId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering view merchant for merchant Id', merchantId, newValue);
+
+    const options = {
+        api_key: TOOKAN_API_KEY,
+        user_id: newValue.user_id
+      };
+    
+      //Viewing merchant in tookan
+    console.log('Viewing merchant for options: ', options);
+    return client.viewMerchant(options).then(res => {
+        return MerchantView(res,merchantId);   
+    })
+    .catch(err => {
+        console.log("Viewing merchant failed: " + err)
+    });
+}
+
+async function MerchantView(res,merchantId): Promise<string> {
+    console.log("Viewing merchant for merchant ID: ",merchantId,"Response received from tookan: ",res);
+    console.log("Viewing merchants based on response for merchantId started",merchantId);
+    console.log("Viewing merchants for merchant Id ",merchantId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(PROVIDERS).doc(merchantId);
+    taskRef.set(res.data).then(() => console.log("Viewing merchants for merchant Id:", merchantId)).catch(err => console.log("Viewing merchants for merchant id failed for: " + err));
+	return merchantId
+}
+
+export async function GetMerchantDetails(snapshot, context) {
+    
+    const merchantId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering get merchant details for merchant Id', merchantId, newValue);
+
+    const options = {
+        api_key: TOOKAN_API_KEY,
+        user_id: newValue.user_id
+      };
+    
+      //Getting merchant details in tookan
+    console.log('Getting merchant details for options: ', options);
+    return client.getMerchantDetails(options).then(res => {
+        return MerchantDetails(res,merchantId);   
+    })
+    .catch(err => {
+        console.log("Getting merchant details failed: " + err)
+    });
+}
+
+async function MerchantDetails(res,merchantId): Promise<string> {
+    console.log("Getting merchant details for merchant ID: ",merchantId,"Response received from tookan: ",res);
+    console.log("Getting merchants details based on response for merchantId started",merchantId);
+    console.log("Getting merchants details for merchant Id ",merchantId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(PROVIDERS).doc(merchantId);
+    taskRef.set(res.data).then(() => console.log("Getting merchants details for merchant Id:", merchantId)).catch(err => console.log("Getting merchants details for merchant id failed for: " + err));
+	return merchantId
+}
+
+export async function GetMerchantReports(snapshot, context) {
+    
+    const merchantId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering get merchant reports for merchant Id', merchantId, newValue);
+
+    const options = {
+        api_key: TOOKAN_API_KEY,
+        user_id: newValue.user_id,
+        merchant_id: newValue.merchant_id
+      };
+    
+      //Getting merchant reports in tookan
+    console.log('Getting merchant reports for options: ', options);
+    return client.getMerchantReport(options).then(res => {
+        return MerchantReports(res,merchantId);   
+    })
+    .catch(err => {
+        console.log("Getting merchant reports failed: " + err)
+    });
+}
+
+async function MerchantReports(res,merchantId): Promise<string> {
+    console.log("Getting merchant reports for merchant ID: ",merchantId,"Response received from tookan: ",res);
+    console.log("Getting merchants reports based on response for merchantId started",merchantId);
+    console.log("Getting merchants reports for merchant Id ",merchantId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(PROVIDERS).doc(merchantId);
+    taskRef.set(res.data).then(() => console.log("Getting merchants reports for merchant Id:", merchantId)).catch(err => console.log("Getting merchants reports for merchant id failed for: " + err));
+	return merchantId
+}
+
+export async function BlockUnblockMerchant(snapshot, context) {
+    
+    const merchantId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering block or unblock merchants for merchant Id', merchantId, newValue);
+
+    const options = {
+        api_key: TOOKAN_API_KEY,
+        is_blocked: newValue.is_blocked,
+        merchant_id: newValue.merchant_id
+      };
+    
+      //Blocking or Unblocking merchants in tookan
+    console.log('Blocking or Unblocking merchants for options: ', options);
+    return client.blockAndUnblockMerchant(options).then(res => {
+        return MerchantBlockUnblock(res,merchantId);   
+    })
+    .catch(err => {
+        console.log("Blocking/Unblocking merchant failed: " + err)
+    });
+}
+
+async function MerchantBlockUnblock(res,merchantId): Promise<string> {
+    console.log("Blocking/Unblocking merchants for merchant ID: ",merchantId,"Response received from tookan: ",res);
+    console.log("Blocking/Unblocking merchants based on response for merchantId started",merchantId);
+    console.log("Blocking/Unblocking merchants for merchant Id ",merchantId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(PROVIDERS).doc(merchantId);
+    taskRef.set(res.data).then(() => console.log("Blocking/Unblocking merchants for merchant Id:", merchantId)).catch(err => console.log("Blocking/Unblocking merchants for merchant id failed for: " + err));
+	return merchantId
+}
+
+export async function AvailableMerchantAgents(snapshot, context) {
+    
+    const merchantId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering get available merchant agents for merchant Id', merchantId, newValue);
+
+    const options = {
+        api_key: TOOKAN_API_KEY,
+        merchant_id: newValue.merchant_id,
+        latitude: newValue.latitude,
+        longitude: newValue.longitude
+      };
+    
+      //Get Available merchant agents in tookan
+    console.log('Get Available merchant agents for options: ', options);
+    return client.getAvailableMerchantAgents(options).then(res => {
+        return MerchantAvailableAgents(res,merchantId);   
+    })
+    .catch(err => {
+        console.log("Getting Available merchant agents failed: " + err)
+    });
+}
+
+async function MerchantAvailableAgents(res,merchantId): Promise<string> {
+    console.log("Getting Available merchants agents for merchant ID: ",merchantId,"Response received from tookan: ",res);
+    console.log("Getting Available merchants agents based on response for merchantId started",merchantId);
+    console.log("Getting Available merchants agents for merchant Id ",merchantId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(PROVIDERS).doc(merchantId);
+    taskRef.set(res.data).then(() => console.log("Getting Available merchants agents for merchant Id:", merchantId)).catch(err => console.log("Getting Available merchants agents for merchant id failed for: " + err));
+	return merchantId
+}
+
+export async function AssignMerchantAgentsTask(snapshot, context) {
+    
+    const merchantId = context.params.customerId;
+    const newValue = snapshot.data();
+    
+
+    console.log('Triggering assign task to merchant agents for merchant Id', merchantId, newValue);
+
+    const options = {
+        api_key: TOOKAN_API_KEY,
+        merchant_id: newValue.merchant_id,
+        job_id: newValue.job_id,
+        team_id: newValue.team_id,
+        fleet_id: newValue.fleet_id,
+        notify: newValue.notify,
+        geofence: newValue.geofence,
+        job_status: newValue.job_status
+      };
+    
+      //Assigning tasks to merchant agents in tookan
+    console.log('Assigning tasks merchant agents for options: ', options);
+    return client.assignMerchantAgentToTask(options).then(res => {
+        return MerchantTasktoAgents(res,merchantId);   
+    })
+    .catch(err => {
+        console.log("Assigning tasks to merchant agents failed: " + err)
+    });
+}
+
+async function MerchantTasktoAgents(res,merchantId): Promise<string> {
+    console.log("Assigning tasks to merchant agents for merchant ID: ",merchantId,"Response received from tookan: ",res);
+    console.log("Assigning tasks to merchant agents based on response for merchantId started",merchantId);
+    console.log("Assigning tasks to merchant agents for merchant Id ",merchantId,"content: ",res.data);
+    const taskRef = firestoreInstance.collection(PROVIDERS).doc(merchantId);
+    taskRef.set(res.data).then(() => console.log("Assigning tasks to merchant agents for merchant Id:", merchantId)).catch(err => console.log("Assigning tasks to merchant agents for merchant id failed for: " + err));
+	return merchantId
 }
